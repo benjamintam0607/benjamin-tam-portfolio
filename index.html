@@ -1,0 +1,804 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benjamin Tam &ndash; Machine Learning Engineer</title>
+
+  <!-- Tailwind v4 CDN (Play) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Cabinet Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts: Cabinet Grotesk + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/cabinet-grotesk/index.css');
+  </style>
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ?? Reset & Base ?? */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #070a0e;
+      color: #e8edf2;
+      overflow-x: hidden;
+    }
+
+    /* ?? Scrollbar ?? */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #070a0e; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+
+    /* ?? Nav Glass ?? */
+    .nav-glass {
+      background: rgba(7, 10, 14, 0.72);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* ?? Hero BG ?? */
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 20%, rgba(16,185,129,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(59,130,246,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 80% at 50% 50%, rgba(7,10,14,1) 0%, transparent 100%);
+      z-index: 0;
+    }
+
+    .hero-grain {
+      position: absolute; inset: 0;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+      z-index: 0;
+    }
+
+    /* ?? Section Spacing ?? */
+    .section-gap { padding: 7rem 0; }
+    @media (min-width: 768px) { .section-gap { padding: 10rem 0; } }
+
+    /* ?? Inline image pill in heading ?? */
+    .inline-pill {
+      display: inline-block;
+      width: 2.4rem; height: 2.4rem;
+      border-radius: 999px;
+      vertical-align: middle;
+      margin: 0 0.5rem;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid rgba(16,185,129,0.3);
+      box-shadow: 0 4px 20px rgba(16,185,129,0.15);
+    }
+    @media (min-width: 768px) { .inline-pill { width: 3rem; height: 3rem; } }
+
+    /* ?? Bent card ?? */
+    .bento-card {
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  border-color 0.4s ease,
+                  box-shadow 0.6s ease;
+      overflow: hidden;
+    }
+    .bento-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(16,185,129,0.25);
+      box-shadow: 0 24px 60px -12px rgba(16,185,129,0.12);
+    }
+
+    /* ?? Section eyebrow (non-meta, tasteful) ?? */
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #10b981;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ?? Skill tag ?? */
+    .skill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(16,185,129,0.08);
+      color: #6ee7b7;
+      border: 1px solid rgba(16,185,129,0.12);
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+    .skill-tag:hover {
+      background: rgba(16,185,129,0.15);
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    /* ?? Marquee ?? */
+    .marquee-track {
+      display: flex;
+      gap: 3rem;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ?? Pinned section ?? */
+    .pinned-container {
+      position: relative;
+    }
+    .pinned-left {
+      grid-column: 1 / 2;
+    }
+    .scroll-right {
+      grid-column: 2 / 3;
+    }
+
+    /* ?? GSAP reveal targets ?? */
+    .reveal-up {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.88);
+    }
+
+    /* ?? CTA section ?? */
+    .cta-gradient {
+      background:
+        radial-gradient(ellipse 100% 80% at 50% 50%, rgba(16,185,129,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 60% at 80% 20%, rgba(59,130,246,0.06) 0%, transparent 60%),
+        #0f172a;
+    }
+
+    /* ?? Responsive ?? */
+    @media (max-width: 768px) {
+      .pinned-grid { display: block !important; }
+      .pinned-left { margin-bottom: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ??????????????????????????????????????????
+       NAVIGATION ??Floating Glass Pill
+       ?????????????????????????????????????????? -->
+  <nav class="nav-glass fixed top-0 left-0 w-full z-50 h-16 md:h-20 flex items-center">
+    <div class="w-full max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <a href="#" class="font-['Cabinet_Grotesk'] text-lg md:text-xl font-bold tracking-tight text-white">
+        BT<span class="text-emerald-400">.</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm text-zinc-400">
+        <a href="#work" class="hover:text-emerald-400 transition-colors duration-300">Experience</a>
+        <a href="#skills" class="hover:text-emerald-400 transition-colors duration-300">Skills</a>
+        <a href="#projects" class="hover:text-emerald-400 transition-colors duration-300">Projects</a>
+        <a href="#contact" class="hover:text-emerald-400 transition-colors duration-300">Contact</a>
+      </div>
+      <a href="#contact"
+         class="text-sm px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all duration-300">
+        Get in touch
+      </a>
+    </div>
+  </nav>
+
+  <main class="w-full max-w-full overflow-x-hidden">
+
+    <!-- ??????????????????????????????????????????
+         HERO ??Artistic Asymmetry (Section 3 #2)
+         ?????????????????????????????????????????? -->
+    <section class="relative min-h-[100dvh] flex items-center pt-24 md:pt-28 pb-16 px-6 overflow-hidden">
+      <div class="hero-bg"></div>
+      <div class="hero-grain"></div>
+
+      <div class="relative z-10 w-full max-w-7xl mx-auto grid md:grid-cols-12 gap-8 md:gap-12 items-center">
+        <!-- Left: Text -->
+        <div class="md:col-span-7 md:pr-6">
+          <div class="eyebrow">Machine Learning Engineer</div>
+          <h1 class="font-['Cabinet_Grotesk'] font-bold tracking-tight leading-[1.05] text-white"
+              style="font-size: clamp(2.4rem, 4vw, 4.5rem); max-width: 10ch;">
+            I build
+            <span class="inline-pill" style="background-image:url('Benjamin_Tam_Photo.jpg')"></span>
+            intelligent systems that see and decide
+          </h1>
+          <p class="mt-6 text-base md:text-lg text-zinc-400 max-w-[52ch] leading-relaxed">
+            Machine Learning Engineer at Vidi Labs. Building vision-language models,
+            autonomous navigation systems, and production CV pipelines that ship real-world impact.
+          </p>
+          <div class="flex flex-wrap gap-4 mt-8">
+            <a href="#projects"
+               class="px-6 py-3 rounded-full bg-emerald-600 text-white font-medium text-sm hover:bg-emerald-500 transition-all duration-300 shadow-lg shadow-emerald-600/20">
+              <i class="ph ph-arrow-right mr-2"></i>View Projects
+            </a>
+            <a href="#contact"
+               class="px-6 py-3 rounded-full bg-white/5 text-zinc-200 border border-white/10 font-medium text-sm hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+              <i class="ph ph-envelope mr-2"></i>Contact Me
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Artistic Photo Treatment -->
+        <div class="md:col-span-5 flex justify-center md:justify-end">
+          <div class="relative group">
+            <div class="w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden border-2 border-emerald-500/20
+                        shadow-[0_0_60px_-12px_rgba(16,185,129,0.25)] transition-all duration-700
+                        group-hover:shadow-[0_0_80px_-8px_rgba(16,185,129,0.35)] group-hover:border-emerald-500/40
+                        grayscale-[20%] contrast-110">
+              <img src="Benjamin_Tam_Photo.jpg" alt="Benjamin Tam"
+                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            </div>
+            <!-- Decorative ring -->
+            <div class="absolute -inset-4 rounded-full border border-emerald-500/5 -z-10
+                        transition-all duration-700 group-hover:border-emerald-500/10 group-hover:-inset-6"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll cue -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-zinc-600">
+        <span class="text-[0.6rem] uppercase tracking-[0.2em] font-mono">Scroll</span>
+        <div class="w-px h-8 bg-gradient-to-b from-zinc-600 to-transparent animate-pulse"></div>
+      </div>
+    </section>
+
+    <!-- ??????????????????????????????????????????
+         MARQUEE ??Trusted Partners (Section 6)
+         ?????????????????????????????????????????? -->
+    <section class="py-12 border-y border-white/5 overflow-hidden bg-[#0a0e14]">
+      <div class="marquee-track">
+        <!-- First set -->
+        <div class="flex items-center gap-12 text-zinc-500 text-sm font-mono uppercase tracking-widest">
+          <span class="flex items-center gap-2"><i class="ph ph-python-logo text-lg text-emerald-400/60"></i> Python</span>
+          <span class="flex items-center gap-2"><i class="ph ph-lightning text-lg text-emerald-400/60"></i> PyTorch</span>
+          <span class="flex items-center gap-2"><i class="ph ph-graph text-lg text-emerald-400/60"></i> TensorFlow</span>
+          <span class="flex items-center gap-2"><i class="ph ph-cpu text-lg text-emerald-400/60"></i> YOLO</span>
+          <span class="flex items-center gap-2"><i class="ph ph-brain text-lg text-emerald-400/60"></i> LLM / VLM</span>
+          <span class="flex items-center gap-2"><i class="ph ph-eye text-lg text-emerald-400/60"></i> OpenCV</span>
+          <span class="flex items-center gap-2"><i class="ph ph-code-block text-lg text-emerald-400/60"></i> LangChain</span>
+          <span class="flex items-center gap-2"><i class="ph ph-cloud text-lg text-emerald-400/60"></i> Docker</span>
+        </div>
+        <!-- Duplicate for seamless loop -->
+        <div class="flex items-center gap-12 text-zinc-500 text-sm font-mono uppercase tracking-widest">
+          <span class="flex items-center gap-2"><i class="ph ph-python-logo text-lg text-emerald-400/60"></i> Python</span>
+          <span class="flex items-center gap-2"><i class="ph ph-lightning text-lg text-emerald-400/60"></i> PyTorch</span>
+          <span class="flex items-center gap-2"><i class="ph ph-graph text-lg text-emerald-400/60"></i> TensorFlow</span>
+          <span class="flex items-center gap-2"><i class="ph ph-cpu text-lg text-emerald-400/60"></i> YOLO</span>
+          <span class="flex items-center gap-2"><i class="ph ph-brain text-lg text-emerald-400/60"></i> LLM / VLM</span>
+          <span class="flex items-center gap-2"><i class="ph ph-eye text-lg text-emerald-400/60"></i> OpenCV</span>
+          <span class="flex items-center gap-2"><i class="ph ph-code-block text-lg text-emerald-400/60"></i> LangChain</span>
+          <span class="flex items-center gap-2"><i class="ph ph-cloud text-lg text-emerald-400/60"></i> Docker</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ??????????????????????????????????????????
+         EXPERIENCE ??GSAP Pinned Split (Section 5)
+         ?????????????????????????????????????????? -->
+    <section id="work" class="section-gap px-6 pinned-container">
+      <div class="w-full max-w-7xl mx-auto grid md:grid-cols-12 gap-8 md:gap-16 pinned-grid">
+        <!-- Pinned Left: Title -->
+        <div class="pinned-left md:col-span-4 md:sticky md:top-32 md:self-start">
+          <div class="eyebrow">Career</div>
+          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]">
+            The<br>journey<br>so far
+          </h2>
+          <p class="mt-4 text-zinc-400 text-sm leading-relaxed max-w-[30ch]">
+            From intern to engineer &ndash; building production AI systems that run
+            at airports, win international awards, and push what machines can perceive.
+          </p>
+        </div>
+
+        <!-- Scroll Right: Experience Cards -->
+        <div class="scroll-right md:col-span-7 md:col-start-6 flex flex-col gap-6">
+          <!-- Card 1 -->
+          <div class="exp-card bento-card reveal-up">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="font-['Cabinet_Grotesk'] text-xl font-bold text-white">Vidi Labs Limited</h3>
+                <p class="text-emerald-400 text-sm font-medium mt-0.5">Machine Learning Engineer</p>
+              </div>
+              <span class="text-zinc-500 text-xs font-mono whitespace-nowrap">Jun 2024 &ndash; Nov 2025</span>
+            </div>
+            <ul class="space-y-2 text-zinc-400 text-sm leading-relaxed">
+              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Fine-tuned VLMs (Qwen3-VL, Llava) for multimodal chatbots via LLaMA-Factory</li>
+              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Built full-stack YOLO detection pipeline &ndash; data collection through deployment</li>
+              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Architected vision-only indoor navigation framework (depth estimation, semantic mapping, path planning)</li>
+              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Contributions awarded CES Innovation Award, HK ICT Awards 2024, SC WIN Now &amp; Next Challenge</li>
+            </ul>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="exp-card bento-card reveal-up">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="font-['Cabinet_Grotesk'] text-xl font-bold text-white">Vidi Labs Limited</h3>
+                <p class="text-emerald-400 text-sm font-medium mt-0.5">ML Engineer Intern</p>
+              </div>
+              <span class="text-zinc-500 text-xs font-mono whitespace-nowrap">Jun &ndash; Aug 2023</span>
+            </div>
+            <ul class="space-y-2 text-zinc-400 text-sm leading-relaxed">
+              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Developed CV models (CNNs, YOLO) for industrial automation</li>
+              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Built OCR + document structure analysis pipelines</li>
+            </ul>
+          </div>
+
+          <!-- Card 3: HKBU Education -->
+          <div class="exp-card bento-card reveal-up">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="font-['Cabinet_Grotesk'] text-xl font-bold text-white">Hong Kong Baptist University</h3>
+                <p class="text-emerald-400 text-sm font-medium mt-0.5">BSc (Hons) Computer Science, AI</p>
+              </div>
+              <span class="text-zinc-500 text-xs font-mono whitespace-nowrap">2020 &ndash; 2024</span>
+            </div>
+            <ul class="space-y-2 text-zinc-400 text-sm leading-relaxed">
+              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Low-light image enhancement with RetinexNet + PyTorch</li>
+              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Library Management System with Vue.js + RESTful API</li>
+            </ul>
+          </div>
+
+          <!-- Card 4: Awards highlight -->
+          <div class="exp-card bento-card reveal-up border-emerald-500/10 bg-emerald-500/5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+                <i class="ph ph-trophy text-emerald-400 text-lg"></i>
+              </div>
+              <div>
+                <p class="text-white font-medium text-sm">International Recognition</p>
+                <p class="text-zinc-400 text-xs mt-0.5">
+                  CES Innovation Award &middot; HK ICT Awards 2024 &middot; SC WIN Venture of the Year
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ??????????????????????????????????????????
+         SKILLS ??Gapless Bento Grid (Section 4)
+         ?????????????????????????????????????????? -->
+    <section id="skills" class="section-gap px-6 bg-[#0a0e14]">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="max-w-xl mb-12 md:mb-16">
+          <div class="eyebrow">Toolbox</div>
+          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]">
+            Stack &amp; capabilities
+          </h2>
+        </div>
+
+        <!-- Gapless Bento: dense grid, 3 columns -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5" style="grid-auto-flow: dense;">
+          <!-- Card 1: AI/ML (col-span-2) -->
+          <div class="bento-card md:col-span-2 md:row-span-1" style="background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(59,130,246,0.04));">
+            <div class="flex items-center gap-2 mb-4">
+              <i class="ph ph-brain text-emerald-400 text-xl"></i>
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">AI / ML</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag">Machine Learning</span>
+              <span class="skill-tag">Deep Learning</span>
+              <span class="skill-tag">LLM</span>
+              <span class="skill-tag">VLM</span>
+              <span class="skill-tag">AGI</span>
+              <span class="skill-tag">LangChain</span>
+              <span class="skill-tag">RAG</span>
+              <span class="skill-tag">Agentic AI</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Languages -->
+          <div class="bento-card md:col-span-1">
+            <div class="flex items-center gap-2 mb-4">
+              <i class="ph ph-code text-emerald-400 text-xl"></i>
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Languages</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">Java</span>
+              <span class="skill-tag">SQL</span>
+              <span class="skill-tag">Vue</span>
+              <span class="skill-tag">Three.js</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Tools & Frameworks (col-span-2) -->
+          <div class="bento-card md:col-span-2">
+            <div class="flex items-center gap-2 mb-4">
+              <i class="ph ph-wrench text-emerald-400 text-xl"></i>
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Tools &amp; Frameworks</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag">PyTorch</span>
+              <span class="skill-tag">TensorFlow</span>
+              <span class="skill-tag">OpenCV</span>
+              <span class="skill-tag">n8n</span>
+              <span class="skill-tag">Pandas</span>
+              <span class="skill-tag">NumPy</span>
+              <span class="skill-tag">Matplotlib</span>
+              <span class="skill-tag">Stable Diffusion</span>
+              <span class="skill-tag">ComfyUI</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Computer Vision -->
+          <div class="bento-card md:col-span-1">
+            <div class="flex items-center gap-2 mb-4">
+              <i class="ph ph-eye text-emerald-400 text-xl"></i>
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">CV</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag">Object Detection</span>
+              <span class="skill-tag">Segmentation</span>
+              <span class="skill-tag">Image Class.</span>
+              <span class="skill-tag">X-Anylabeling</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Platforms & Other (row-span-2) -->
+          <div class="bento-card md:col-span-1 md:row-span-2 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-4">
+                <i class="ph ph-devices text-emerald-400 text-xl"></i>
+                <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Platforms</h3>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="skill-tag">Conda</span>
+                <span class="skill-tag">Linux</span>
+                <span class="skill-tag">Windows</span>
+                <span class="skill-tag">Office</span>
+              </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/5">
+              <div class="flex items-center gap-2 mb-3">
+                <i class="ph ph-translate text-emerald-400 text-xl"></i>
+                <h3 class="font-['Cabinet_Grotesk'] text-base font-bold text-white">Languages</h3>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="skill-tag">Cantonese</span>
+                <span class="skill-tag">English</span>
+                <span class="skill-tag">Mandarin</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6: Awards (col-span-1) -->
+          <div class="bento-card md:col-span-1 bg-emerald-500/5 border-emerald-500/10 flex flex-col items-center justify-center text-center">
+            <i class="ph ph-award text-emerald-400 text-3xl mb-2"></i>
+            <p class="text-white font-medium text-sm">CES Innovation<br>Award 2024</p>
+            <p class="text-zinc-500 text-[0.65rem] mt-1">Accessibility &amp; Agetech</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ??????????????????????????????????????????
+         PROJECTS ??GSAP Image Scale & Fade (Section 5)
+         ?????????????????????????????????????????? -->
+    <section id="projects" class="section-gap px-6">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="mb-12 md:mb-16">
+          <div class="eyebrow">Projects</div>
+          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]">
+            Featured work
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+          <!-- Project 1: Low-Light Enhancement -->
+          <div class="project-card bento-card p-0 overflow-hidden group reveal-scale">
+            <div class="h-48 md:h-56 overflow-hidden relative">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent z-10"></div>
+              <img src="https://picsum.photos/seed/lowlight/800/500" alt="Low-Light Image Enhancement"
+                   class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 grayscale-30 contrast-125">
+            </div>
+            <div class="p-5 md:p-6">
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Low-Light Image Enhancement</h3>
+              <p class="text-emerald-400 text-xs font-medium mt-1 mb-2">HKBU &middot; PyTorch &middot; RetinexNet</p>
+              <p class="text-zinc-400 text-sm leading-relaxed">
+                Designed a deep learning system using RetinexNet architecture to improve
+                visibility in low-light conditions with rigorous qualitative and quantitative validation.
+              </p>
+            </div>
+          </div>
+
+          <!-- Project 2: Library Management System -->
+          <div class="project-card bento-card p-0 overflow-hidden group reveal-scale">
+            <div class="h-48 md:h-56 overflow-hidden relative">
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent z-10"></div>
+              <img src="https://picsum.photos/seed/library/800/500" alt="Library Management System"
+                   class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 grayscale-30 contrast-125">
+            </div>
+            <div class="p-5 md:p-6">
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Library Management System</h3>
+              <p class="text-emerald-400 text-xs font-medium mt-1 mb-2">HKBU &middot; Vue.js &middot; REST API</p>
+              <p class="text-zinc-400 text-sm leading-relaxed">
+                Full-featured web app with book cataloging, loan tracking, and intuitive UI.
+                Agile team delivery with RESTful integration and responsive frontend architecture.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ??????????????????????????????????????????
+         VOLUNTEER ??Feedback Carousel (Section 6)
+         ?????????????????????????????????????????? -->
+    <section class="section-gap px-6 bg-[#0a0e14]">
+      <div class="w-full max-w-7xl mx-auto">
+        <div class="mb-12 md:mb-16">
+          <div class="eyebrow">Community</div>
+          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]">
+            Beyond the code
+          </h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Volunteer 1 -->
+          <div class="bento-card flex flex-col reveal-up">
+            <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
+              <i class="ph ph-handshake text-emerald-400 text-lg"></i>
+            </div>
+            <h3 class="font-['Cabinet_Grotesk'] text-base font-bold text-white mb-2">External Secretary</h3>
+            <p class="text-emerald-400 text-xs font-medium mb-2">HKBU Social Service Association</p>
+            <p class="text-zinc-400 text-sm leading-relaxed flex-1">
+              Led 10 volunteers in community Cantonese teaching. Managed external relations,
+              partnerships, and outreach communications.
+            </p>
+          </div>
+
+          <!-- Volunteer 2 -->
+          <div class="bento-card flex flex-col reveal-up">
+            <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
+              <i class="ph ph-tree text-emerald-400 text-lg"></i>
+            </div>
+            <h3 class="font-['Cabinet_Grotesk'] text-base font-bold text-white mb-2">Eco-Ranger</h3>
+            <p class="text-emerald-400 text-xs font-medium mb-2">Hang Seng &middot; Conservancy Association</p>
+            <p class="text-zinc-400 text-sm leading-relaxed flex-1">
+              Joined conservation teams for mountain clean-up operations and environmental outreach in Hong Kong.
+            </p>
+          </div>
+
+          <!-- Volunteer 3 -->
+          <div class="bento-card flex flex-col reveal-up">
+            <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
+              <i class="ph ph-drop text-emerald-400 text-lg"></i>
+            </div>
+            <h3 class="font-['Cabinet_Grotesk'] text-base font-bold text-white mb-2">Blood Donation Promoter</h3>
+            <p class="text-emerald-400 text-xs font-medium mb-2">Hong Kong Red Cross</p>
+            <p class="text-zinc-400 text-sm leading-relaxed flex-1">
+              Organized on-campus donation events, engaged the public, and supported operations.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ??????????????????????????????????????????
+         CTA ??Action (Section 2)
+         ?????????????????????????????????????????? -->
+    <section id="contact" class="section-gap px-6 cta-gradient">
+      <div class="w-full max-w-4xl mx-auto text-center">
+        <div class="eyebrow justify-center">Connect</div>
+        <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-6xl font-bold tracking-tight text-white leading-[1.05] max-w-4xl mx-auto">
+          Let&rsquo;s build<br class="md:hidden"> something<span class="text-emerald-400"> intelligent</span>
+        </h2>
+        <p class="mt-6 text-zinc-400 text-base md:text-lg max-w-lg mx-auto leading-relaxed">
+          Open to ML engineering roles, research collaborations, and projects at the
+          intersection of vision, language, and autonomous systems.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 mt-10">
+          <a href="mailto:benjamin.tam0607@gmail.com"
+             class="px-8 py-4 rounded-full bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-500 transition-all duration-300 shadow-xl shadow-emerald-600/20 flex items-center gap-2">
+            <i class="ph ph-paper-plane-right text-base"></i> benjamin.tam0607@gmail.com
+          </a>
+          <a href="https://www.linkedin.com/in/benjamintam0607" target="_blank"
+             class="px-8 py-4 rounded-full bg-white/5 text-zinc-200 border border-white/10 font-semibold text-sm hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center gap-2">
+            <i class="ph ph-linkedin-logo text-base"></i> LinkedIn
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ??????????????????????????????????????????
+         FOOTER
+         ?????????????????????????????????????????? -->
+    <footer class="py-10 px-6 border-t border-white/5 bg-[#070a0e]">
+      <div class="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-500 text-xs">
+        <p>&copy; <span id="current-year">2025</span> Benjamin Tam. All rights reserved.</p>
+        <div class="flex items-center gap-6">
+          <a href="mailto:benjamin.tam0607@gmail.com" class="hover:text-emerald-400 transition-colors">Email</a>
+          <a href="https://www.linkedin.com/in/benjamintam0607" target="_blank" class="hover:text-emerald-400 transition-colors">LinkedIn</a>
+          <span class="text-zinc-700">(852) 67080288</span>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ??????????????????????????????????????????
+       JAVASCRIPT ??GSAP + ScrollTrigger + Utilities
+       ?????????????????????????????????????????? -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // ?? Footer year ??
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+
+      // ?? Smooth scroll for nav links ??
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const id = this.getAttribute('href');
+          if (id === '#') return;
+          const target = document.querySelector(id);
+          if (target) {
+            e.preventDefault();
+            window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+          }
+        });
+      });
+
+      // ?? GSAP: Register ScrollTrigger ??
+      gsap.registerPlugin(ScrollTrigger);
+
+      // ?? 1. Scroll Pinning (Split) ??Section title pins left ??
+      const pinnedSection = document.querySelector('.pinned-container');
+      const pinnedLeft = pinnedSection?.querySelector('.pinned-left');
+      const scrollRight = pinnedSection?.querySelector('.scroll-right');
+
+      if (pinnedLeft && scrollRight && window.innerWidth >= 768) {
+        // Pin the left column while right scrolls
+        ScrollTrigger.create({
+          trigger: pinnedSection,
+          start: 'top 96px',
+          end: () => '+=' + (scrollRight.scrollHeight - scrollRight.offsetHeight + 200),
+          pin: pinnedLeft,
+          pinSpacing: false,
+          anticipatePin: 1,
+        });
+
+        // Animate experience cards on scroll
+        const expCards = pinnedSection.querySelectorAll('.exp-card');
+        expCards.forEach((card, i) => {
+          gsap.to(card, {
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            delay: i * 0.12,
+            ease: 'power2.out',
+          });
+        });
+      } else {
+        // Mobile fallback: just fade cards in
+        document.querySelectorAll('.reveal-up').forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      }
+
+      // ?? 2. Project Cards: Image Scale & Fade (Section 5) ??
+      const projectCards = document.querySelectorAll('.project-card');
+      projectCards.forEach(card => {
+        const img = card.querySelector('img');
+        if (!img) return;
+        gsap.fromTo(img,
+          { scale: 0.85, opacity: 0.5 },
+          {
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 85%',
+              end: 'top 30%',
+              scrub: 1.2,
+            },
+            scale: 1,
+            opacity: 1,
+            ease: 'none',
+          }
+        );
+        gsap.to(img, {
+          scrollTrigger: {
+            trigger: card,
+            start: 'bottom 70%',
+            end: 'bottom 20%',
+            scrub: 1.2,
+          },
+          scale: 0.82,
+          opacity: 0.25,
+          ease: 'none',
+        });
+      });
+
+      // ?? 3. Reveal-up for volunteer cards ??
+      document.querySelectorAll('.reveal-up').forEach(el => {
+        gsap.to(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            toggleActions: 'play none none reverse',
+          },
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+        });
+      });
+
+      // ?? 4. Reveal-scale for project containers ??
+      document.querySelectorAll('.reveal-scale').forEach(el => {
+        gsap.to(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse',
+          },
+          opacity: 1,
+          scale: 1,
+          duration: 0.9,
+          ease: 'power3.out',
+        });
+      });
+
+      // ?? 5. Marquee pause on hover (CSS handles this, but GSAP fallback) ??
+      // Already handled via CSS: .marquee-track:hover { animation-play-state: paused; }
+
+      // ?? 6. Nav bar subtle parallax / shrink on scroll ??
+      gsap.to('.nav-glass', {
+        scrollTrigger: {
+          trigger: 'body',
+          start: 'top -80px',
+          end: 'top -160px',
+          scrub: 0.5,
+        },
+        height: '56px',
+        ease: 'none',
+      });
+
+      // ?? 7. Console greeting (tasteful) ??
+      console.log('%cBenjamin Tam', 'font-family: Cabinet Grotesk; font-size: 20px; font-weight: bold; color: #10b981');
+      console.log('%cML Engineer 繚 benjamin.tam0607@gmail.com', 'color: #8b949e');
+      console.log('%clinkedin.com/in/benjamintam0607', 'color: #3b82f6');
+
+    }); // end DOMContentLoaded
+  </script>
+</body>
+</html>
