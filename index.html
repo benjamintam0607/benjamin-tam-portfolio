@@ -290,6 +290,115 @@
       .pinned-grid { display: block !important; }
       .pinned-left { margin-bottom: 2rem; }
     }
+
+    /* ═══ Lightbox ═══ */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .lightbox-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .lightbox-img {
+      max-width: 92vw;
+      max-height: 88vh;
+      border-radius: 0.75rem;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+      transform: scale(0.92);
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1);
+    }
+    .lightbox-overlay.active .lightbox-img {
+      transform: scale(1);
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.5rem;
+      z-index: 10000;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 999px;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s ease;
+      opacity: 0;
+      visibility: hidden;
+    }
+    .lightbox-overlay.active .lightbox-close {
+      opacity: 1;
+      visibility: visible;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.22); }
+    .lightbox-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10000;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 999px;
+      border: none;
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s ease;
+      opacity: 0;
+      visibility: hidden;
+    }
+    .lightbox-overlay.active .lightbox-nav {
+      opacity: 1;
+      visibility: visible;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.22); }
+    .lightbox-prev { left: 1.25rem; }
+    .lightbox-next { right: 1.25rem; }
+    .lightbox-caption {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10000;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.05em;
+      background: rgba(0,0,0,0.4);
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+    .lightbox-overlay.active .lightbox-caption {
+      opacity: 1;
+      visibility: visible;
+    }
+    @media (max-width: 640px) {
+      .lightbox-nav { width: 2.25rem; height: 2.25rem; font-size: 1rem; }
+      .lightbox-prev { left: 0.75rem; }
+      .lightbox-next { right: 0.75rem; }
+      .lightbox-close { top: 0.75rem; right: 0.75rem; width: 2rem; height: 2rem; }
+    }
   </style>
 </head>
 <body class="theme-trans">
@@ -471,16 +580,16 @@
             <p class="t-text-secondary text-xs mb-4">
               CES Innovation Award &middot; HK ICT Awards 2024 &middot; SC WIN Venture of the Year
             </p>
-            <div class="grid grid-cols-3 gap-3">
-              <a href="award-ces.png" target="_blank" class="block rounded-lg overflow-hidden border" style="border-color:var(--border);aspect-ratio:716/612;background:var(--bg-card)" onmouseover="this.style.borderColor='var(--border-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+            <div class="grid grid-cols-3 gap-3" id="awardGallery">
+              <button class="block rounded-lg overflow-hidden border cursor-pointer w-full text-left" style="border-color:var(--border);aspect-ratio:716/612;background:var(--bg-card);transition:border-color 0.3s ease" data-src="award-ces.png" data-alt="CES Innovation Award" onmouseover="this.style.borderColor='var(--border-accent)'" onmouseout="this.style.borderColor='var(--border)'">
                 <img src="award-ces.png" alt="CES Innovation Award" class="w-full h-full object-contain" loading="lazy">
-              </a>
-              <a href="award-ict.png" target="_blank" class="block rounded-lg overflow-hidden border" style="border-color:var(--border);aspect-ratio:726/486;background:var(--bg-card)" onmouseover="this.style.borderColor='var(--border-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+              </button>
+              <button class="block rounded-lg overflow-hidden border cursor-pointer w-full text-left" style="border-color:var(--border);aspect-ratio:726/486;background:var(--bg-card);transition:border-color 0.3s ease" data-src="award-ict.png" data-alt="HK ICT Awards 2024" onmouseover="this.style.borderColor='var(--border-accent)'" onmouseout="this.style.borderColor='var(--border)'">
                 <img src="award-ict.png" alt="HK ICT Awards 2024" class="w-full h-full object-contain" loading="lazy">
-              </a>
-              <a href="award-win.png" target="_blank" class="block rounded-lg overflow-hidden border" style="border-color:var(--border);aspect-ratio:615/486;background:var(--bg-card)" onmouseover="this.style.borderColor='var(--border-accent)'" onmouseout="this.style.borderColor='var(--border)'">
+              </button>
+              <button class="block rounded-lg overflow-hidden border cursor-pointer w-full text-left" style="border-color:var(--border);aspect-ratio:615/486;background:var(--bg-card);transition:border-color 0.3s ease" data-src="award-win.png" data-alt="SC WIN Venture of the Year" onmouseover="this.style.borderColor='var(--border-accent)'" onmouseout="this.style.borderColor='var(--border)'">
                 <img src="award-win.png" alt="SC WIN Venture of the Year" class="w-full h-full object-contain" loading="lazy">
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -731,6 +840,15 @@
 
   </main>
 
+  <!-- ═══ LIGHTBOX ═══ -->
+  <div class="lightbox-overlay" id="lightbox">
+    <button class="lightbox-close" id="lbClose" aria-label="Close"><i class="ph ph-x"></i></button>
+    <button class="lightbox-nav lightbox-prev" id="lbPrev" aria-label="Previous"><i class="ph ph-caret-left"></i></button>
+    <button class="lightbox-nav lightbox-next" id="lbNext" aria-label="Next"><i class="ph ph-caret-right"></i></button>
+    <img class="lightbox-img" id="lbImg" src="" alt="">
+    <div class="lightbox-caption" id="lbCaption"></div>
+  </div>
+
   <!-- ═══ JAVASCRIPT ═══ -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -777,6 +895,61 @@
       toggleBtn.addEventListener('click', function() {
         setTheme(!html.classList.contains('dark'));
       });
+
+      // ── Lightbox ──
+      const lbOverlay = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lbImg');
+      const lbCaption = document.getElementById('lbCaption');
+      const lbClose = document.getElementById('lbClose');
+      const lbPrev = document.getElementById('lbPrev');
+      const lbNext = document.getElementById('lbNext');
+      const lbItems = Array.from(document.querySelectorAll('#awardGallery button'));
+      let lbIndex = -1;
+
+      function openLightbox(idx) {
+        if (idx < 0 || idx >= lbItems.length) return;
+        lbIndex = idx;
+        const btn = lbItems[idx];
+        lbImg.src = btn.dataset.src;
+        lbImg.alt = btn.dataset.alt;
+        lbCaption.textContent = (idx + 1) + ' / ' + lbItems.length + '  -  ' + btn.dataset.alt;
+        lbOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lbOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function prevLightbox() {
+        if (lbIndex > 0) openLightbox(lbIndex - 1);
+        else openLightbox(lbItems.length - 1);
+      }
+
+      function nextLightbox() {
+        if (lbIndex < lbItems.length - 1) openLightbox(lbIndex + 1);
+        else openLightbox(0);
+      }
+
+      lbItems.forEach((btn, i) => {
+        btn.addEventListener('click', function(e) { e.preventDefault(); openLightbox(i); });
+      });
+
+      lbClose.addEventListener('click', closeLightbox);
+      lbOverlay.addEventListener('click', function(e) { if (e.target === lbOverlay) closeLightbox(); });
+      lbPrev.addEventListener('click', prevLightbox);
+      lbNext.addEventListener('click', nextLightbox);
+
+      document.addEventListener('keydown', function(e) {
+        if (!lbOverlay.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') prevLightbox();
+        if (e.key === 'ArrowRight') nextLightbox();
+      });
+
+      // Prevent gallery button images from being draggable
+      document.querySelectorAll('#awardGallery img').forEach(function(img) { img.draggable = false; });
 
       // ── GSAP ──
       gsap.registerPlugin(ScrollTrigger);
