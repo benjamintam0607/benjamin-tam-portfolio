@@ -5,24 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Benjamin Tam &ndash; Machine Learning Engineer</title>
 
-  <!-- Tailwind v4 CDN (Play) -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Prevent flash: check saved theme before paint -->
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['"Cabinet Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-          },
-          colors: {
-          }
-        }
-      }
-    }
+    (function() {
+      var saved = localStorage.getItem('theme');
+      if (saved === 'dark') document.documentElement.classList.add('dark');
+    })();
   </script>
 
-  <!-- Fonts: Cabinet Grotesk + JetBrains Mono -->
+  <!-- Tailwind v4 CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -38,39 +32,138 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <style>
-    /* ?? Reset & Base ?? */
+    /* ═══ Theme Variables ═══ */
+    :root {
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-alt: #f1f5f9;
+      --bg-cta: #ffffff;
+      --bg-marquee: #f8fafc;
+      --bg-nav: rgba(248,250,252,0.78);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+      --accent: #059669;
+      --accent-light: #10b981;
+      --accent-deep: #047857;
+      --border: rgba(0,0,0,0.07);
+      --border-accent: rgba(5,150,105,0.20);
+      --shadow-accent: rgba(5,150,105,0.12);
+      --nav-border: rgba(0,0,0,0.06);
+      --scrollbar-track: #e2e8f0;
+      --scrollbar-thumb: #cbd5e1;
+      --tag-bg: rgba(5,150,105,0.07);
+      --tag-text: #047857;
+      --tag-border: rgba(5,150,105,0.14);
+      --hero-radial-1: rgba(5,150,105,0.07);
+      --hero-radial-2: rgba(37,99,235,0.05);
+      --hero-radial-bg: #f8fafc;
+      --photo-border: rgba(5,150,105,0.15);
+      --photo-shadow: rgba(5,150,105,0.15);
+      --img-overlay: linear-gradient(to top, rgba(255,255,255,0.85), transparent);
+      --btn-sec-bg: rgba(0,0,0,0.04);
+      --btn-sec-text: #1e293b;
+      --btn-sec-border: rgba(0,0,0,0.08);
+      --eyebrow-color: #059669;
+      --marquee-border: rgba(0,0,0,0.06);
+      --footer-border: rgba(0,0,0,0.06);
+      --bento-acc-bg: linear-gradient(135deg, rgba(5,150,105,0.05), rgba(37,99,235,0.03));
+      --nav-logo: #0f172a;
+      --scroll-cue: #94a3b8;
+      --console-color: #8b949e;
+      --phone-color: #94a3b8;
+    }
+
+    html.dark {
+      --bg-body: #070a0e;
+      --bg-card: #0f172a;
+      --bg-alt: #0a0e14;
+      --bg-cta: #0f172a;
+      --bg-marquee: #0a0e14;
+      --bg-nav: rgba(7,10,14,0.72);
+      --text-primary: #f0f6fc;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --text-dim: #4a5568;
+      --accent: #10b981;
+      --accent-light: #34d399;
+      --accent-deep: #059669;
+      --border: rgba(255,255,255,0.06);
+      --border-accent: rgba(16,185,129,0.20);
+      --shadow-accent: rgba(16,185,129,0.12);
+      --nav-border: rgba(255,255,255,0.06);
+      --scrollbar-track: #070a0e;
+      --scrollbar-thumb: #1e293b;
+      --tag-bg: rgba(16,185,129,0.08);
+      --tag-text: #6ee7b7;
+      --tag-border: rgba(16,185,129,0.12);
+      --hero-radial-1: rgba(16,185,129,0.10);
+      --hero-radial-2: rgba(59,130,246,0.07);
+      --hero-radial-bg: rgba(7,10,14,1);
+      --photo-border: rgba(16,185,129,0.20);
+      --photo-shadow: rgba(16,185,129,0.25);
+      --img-overlay: linear-gradient(to top, rgba(15,23,42,0.9), transparent);
+      --btn-sec-bg: rgba(255,255,255,0.05);
+      --btn-sec-text: #e2e8f0;
+      --btn-sec-border: rgba(255,255,255,0.10);
+      --eyebrow-color: #10b981;
+      --marquee-border: rgba(255,255,255,0.05);
+      --footer-border: rgba(255,255,255,0.05);
+      --bento-acc-bg: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(59,130,246,0.04));
+      --nav-logo: #ffffff;
+      --scroll-cue: #52525b;
+      --console-color: #8b949e;
+      --phone-color: #52525b;
+    }
+
+    /* ═══ Base ═══ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
-      background: #070a0e;
-      color: #e8edf2;
+      background: var(--bg-body);
+      color: var(--text-primary);
       overflow-x: hidden;
+      transition: background 0.35s ease, color 0.35s ease;
     }
 
-    /* ?? Scrollbar ?? */
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #070a0e; }
-    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: var(--scrollbar-track); transition: background 0.35s ease; }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; transition: background 0.35s ease; }
 
-    /* ?? Nav Glass ?? */
+    /* ═══ Common theme classes ═══ */
+    .theme-trans, .theme-trans * { transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
+    .t-bg { background: var(--bg-body); }
+    .t-bg-card { background: var(--bg-card); }
+    .t-bg-alt { background: var(--bg-alt); }
+    .t-text { color: var(--text-primary); }
+    .t-text-secondary { color: var(--text-secondary); }
+    .t-text-muted { color: var(--text-muted); }
+    .t-text-dim { color: var(--text-dim); }
+    .t-accent { color: var(--accent); }
+    .t-accent-light { color: var(--accent-light); }
+    .t-border { border-color: var(--border); }
+    .t-border-accent { border-color: var(--border-accent); }
+
+    /* ═══ Nav ═══ */
     .nav-glass {
-      background: rgba(7, 10, 14, 0.72);
+      background: var(--bg-nav);
       backdrop-filter: blur(20px) saturate(160%);
       -webkit-backdrop-filter: blur(20px) saturate(160%);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid var(--nav-border);
+      transition: background 0.35s ease, border-color 0.35s ease;
     }
 
-    /* ?? Hero BG ?? */
+    /* ═══ Hero ═══ */
     .hero-bg {
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 70% 20%, rgba(16,185,129,0.10) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(59,130,246,0.07) 0%, transparent 60%),
-        radial-gradient(ellipse 100% 80% at 50% 50%, rgba(7,10,14,1) 0%, transparent 100%);
+        radial-gradient(ellipse 80% 60% at 70% 20%, var(--hero-radial-1) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 20% 80%, var(--hero-radial-2) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 80% at 50% 50%, var(--hero-radial-bg) 0%, transparent 100%);
       z-index: 0;
     }
-
     .hero-grain {
       position: absolute; inset: 0;
       opacity: 0.035;
@@ -79,11 +172,10 @@
       z-index: 0;
     }
 
-    /* ?? Section Spacing ?? */
+    /* ═══ Sections ═══ */
     .section-gap { padding: 7rem 0; }
     @media (min-width: 768px) { .section-gap { padding: 10rem 0; } }
 
-    /* ?? Inline image pill in heading ?? */
     .inline-pill {
       display: inline-block;
       width: 2.4rem; height: 2.4rem;
@@ -92,15 +184,14 @@
       margin: 0 0.5rem;
       background-size: cover;
       background-position: center;
-      border: 2px solid rgba(16,185,129,0.3);
-      box-shadow: 0 4px 20px rgba(16,185,129,0.15);
+      border: 2px solid var(--border-accent);
+      box-shadow: 0 4px 20px var(--shadow-accent);
     }
     @media (min-width: 768px) { .inline-pill { width: 3rem; height: 3rem; } }
 
-    /* ?? Bent card ?? */
     .bento-card {
-      background: #0f172a;
-      border: 1px solid rgba(255,255,255,0.06);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: 1.25rem;
       padding: 1.75rem;
       transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
@@ -110,21 +201,20 @@
     }
     .bento-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(16,185,129,0.25);
-      box-shadow: 0 24px 60px -12px rgba(16,185,129,0.12);
+      border-color: var(--border-accent);
+      box-shadow: 0 24px 60px -12px var(--shadow-accent);
     }
 
-    /* ?? Section eyebrow (non-meta, tasteful) ?? */
     .eyebrow {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.75rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: #10b981;
+      color: var(--eyebrow-color);
       margin-bottom: 0.75rem;
+      transition: color 0.35s ease;
     }
 
-    /* ?? Skill tag ?? */
     .skill-tag {
       display: inline-flex;
       align-items: center;
@@ -133,9 +223,9 @@
       border-radius: 100px;
       font-size: 0.8rem;
       font-family: 'JetBrains Mono', monospace;
-      background: rgba(16,185,129,0.08);
-      color: #6ee7b7;
-      border: 1px solid rgba(16,185,129,0.12);
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border: 1px solid var(--tag-border);
       transition: all 0.3s ease;
       cursor: default;
     }
@@ -144,7 +234,6 @@
       transform: translateY(-2px) scale(1.03);
     }
 
-    /* ?? Marquee ?? */
     .marquee-track {
       display: flex;
       gap: 3rem;
@@ -157,18 +246,10 @@
       100% { transform: translateX(-50%); }
     }
 
-    /* ?? Pinned section ?? */
-    .pinned-container {
-      position: relative;
-    }
-    .pinned-left {
-      grid-column: 1 / 2;
-    }
-    .scroll-right {
-      grid-column: 2 / 3;
-    }
+    .pinned-container { position: relative; }
+    .pinned-left { grid-column: 1 / 2; }
+    .scroll-right { grid-column: 2 / 3; }
 
-    /* ?? GSAP reveal targets ?? */
     .reveal-up {
       opacity: 0;
       transform: translateY(40px);
@@ -178,208 +259,218 @@
       transform: scale(0.88);
     }
 
-    /* ?? CTA section ?? */
     .cta-gradient {
       background:
-        radial-gradient(ellipse 100% 80% at 50% 50%, rgba(16,185,129,0.08) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 60% at 80% 20%, rgba(59,130,246,0.06) 0%, transparent 60%),
-        #0f172a;
+        radial-gradient(ellipse 100% 80% at 50% 50%, var(--hero-radial-1) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 60% at 80% 20%, var(--hero-radial-2) 0%, transparent 60%),
+        var(--bg-cta);
     }
 
-    /* ?? Responsive ?? */
+    /* Theme toggle button */
+    .theme-toggle {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--btn-sec-bg);
+      border: 1px solid var(--btn-sec-border);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    .theme-toggle:hover {
+      background: var(--border-accent);
+      color: var(--accent);
+    }
+
     @media (max-width: 768px) {
       .pinned-grid { display: block !important; }
       .pinned-left { margin-bottom: 2rem; }
     }
   </style>
 </head>
-<body>
+<body class="theme-trans">
 
-  <!-- ??????????????????????????????????????????
-       NAVIGATION ??Floating Glass Pill
-       ?????????????????????????????????????????? -->
+  <!-- ═══ NAVIGATION ═══ -->
   <nav class="nav-glass fixed top-0 left-0 w-full z-50 h-16 md:h-20 flex items-center">
     <div class="w-full max-w-7xl mx-auto px-6 flex items-center justify-between">
-      <a href="#" class="font-['Cabinet_Grotesk'] text-lg md:text-xl font-bold tracking-tight text-white">
-        BT<span class="text-emerald-400">.</span>
+      <a href="#" class="font-['Cabinet_Grotesk'] text-lg md:text-xl font-bold tracking-tight" style="color:var(--nav-logo)">
+        BT<span class="t-accent-light">.</span>
       </a>
-      <div class="hidden md:flex items-center gap-8 text-sm text-zinc-400">
-        <a href="#work" class="hover:text-emerald-400 transition-colors duration-300">Experience</a>
-        <a href="#skills" class="hover:text-emerald-400 transition-colors duration-300">Skills</a>
-        <a href="#projects" class="hover:text-emerald-400 transition-colors duration-300">Projects</a>
-        <a href="#contact" class="hover:text-emerald-400 transition-colors duration-300">Contact</a>
+      <div class="hidden md:flex items-center gap-8 text-sm t-text-secondary">
+        <a href="#work" class="hover:t-accent-light transition-colors duration-300">Experience</a>
+        <a href="#skills" class="hover:t-accent-light transition-colors duration-300">Skills</a>
+        <a href="#projects" class="hover:t-accent-light transition-colors duration-300">Projects</a>
+        <a href="#contact" class="hover:t-accent-light transition-colors duration-300">Contact</a>
       </div>
-      <a href="#contact"
-         class="text-sm px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all duration-300">
-        Get in touch
-      </a>
+      <div class="flex items-center gap-3">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <i class="ph ph-sun" id="themeIcon"></i>
+        </button>
+        <a href="#contact"
+           class="text-sm px-4 py-2 rounded-full t-tag-bg t-accent-light border" style="border-color:var(--tag-border);transition:all 0.3s ease;background:var(--tag-bg)">
+          Get in touch
+        </a>
+      </div>
     </div>
   </nav>
 
   <main class="w-full max-w-full overflow-x-hidden">
 
-    <!-- ??????????????????????????????????????????
-         HERO ??Artistic Asymmetry (Section 3 #2)
-         ?????????????????????????????????????????? -->
+    <!-- ═══ HERO ═══ -->
     <section class="relative min-h-[100dvh] flex items-center pt-24 md:pt-28 pb-16 px-6 overflow-hidden">
       <div class="hero-bg"></div>
       <div class="hero-grain"></div>
 
       <div class="relative z-10 w-full max-w-7xl mx-auto grid md:grid-cols-12 gap-8 md:gap-12 items-center">
-        <!-- Left: Text -->
         <div class="md:col-span-7 md:pr-6">
           <div class="eyebrow">Machine Learning Engineer</div>
-          <h1 class="font-['Cabinet_Grotesk'] font-bold tracking-tight leading-[1.05] text-white"
+          <h1 class="font-['Cabinet_Grotesk'] font-bold tracking-tight leading-[1.05] t-text"
               style="font-size: clamp(2.4rem, 4vw, 4.5rem); max-width: 10ch;">
             I build
             <span class="inline-pill" style="background-image:url('Benjamin_Tam_Photo.jpg')"></span>
             intelligent systems that see and decide
           </h1>
-          <p class="mt-6 text-base md:text-lg text-zinc-400 max-w-[52ch] leading-relaxed">
+          <p class="mt-6 text-base md:text-lg t-text-secondary max-w-[52ch] leading-relaxed">
             Machine Learning Engineer at Vidi Labs. Building vision-language models,
             autonomous navigation systems, and production CV pipelines that ship real-world impact.
           </p>
           <div class="flex flex-wrap gap-4 mt-8">
             <a href="#projects"
-               class="px-6 py-3 rounded-full bg-emerald-600 text-white font-medium text-sm hover:bg-emerald-500 transition-all duration-300 shadow-lg shadow-emerald-600/20">
+               class="px-6 py-3 rounded-full text-white font-medium text-sm transition-all duration-300 shadow-lg"
+               style="background:var(--accent-deep);box-shadow:0 4px 16px var(--shadow-accent)"
+               onmouseover="this.style.background='var(--accent)'" onmouseout="this.style.background='var(--accent-deep)'">
               <i class="ph ph-arrow-right mr-2"></i>View Projects
             </a>
             <a href="#contact"
-               class="px-6 py-3 rounded-full bg-white/5 text-zinc-200 border border-white/10 font-medium text-sm hover:bg-white/10 hover:border-white/20 transition-all duration-300">
+               class="px-6 py-3 rounded-full font-medium text-sm transition-all duration-300"
+               style="background:var(--btn-sec-bg);color:var(--btn-sec-text);border:1px solid var(--btn-sec-border)"
+               onmouseover="this.style.background='var(--border-accent)'" onmouseout="this.style.background='var(--btn-sec-bg)'">
               <i class="ph ph-envelope mr-2"></i>Contact Me
             </a>
           </div>
         </div>
 
-        <!-- Right: Artistic Photo Treatment -->
         <div class="md:col-span-5 flex justify-center md:justify-end">
           <div class="relative group">
-            <div class="w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden border-2 border-emerald-500/20
-                        shadow-[0_0_60px_-12px_rgba(16,185,129,0.25)] transition-all duration-700
-                        group-hover:shadow-[0_0_80px_-8px_rgba(16,185,129,0.35)] group-hover:border-emerald-500/40
-                        grayscale-[20%] contrast-110">
+            <div class="w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden border-2"
+                 style="border-color:var(--photo-border);box-shadow:0 0 60px -12px var(--photo-shadow)"
+                 onmouseover="this.style.boxShadow='0 0 80px -8px var(--photo-shadow)';this.style.borderColor='var(--border-accent)'"
+                 onmouseout="this.style.boxShadow='0 0 60px -12px var(--photo-shadow)';this.style.borderColor='var(--photo-border)'">
               <img src="Benjamin_Tam_Photo.jpg" alt="Benjamin Tam"
-                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale-[20%] contrast-110">
             </div>
-            <!-- Decorative ring -->
-            <div class="absolute -inset-4 rounded-full border border-emerald-500/5 -z-10
-                        transition-all duration-700 group-hover:border-emerald-500/10 group-hover:-inset-6"></div>
+            <div class="absolute -inset-4 rounded-full border -z-10 transition-all duration-700"
+                 style="border-color:var(--border)"
+                 onmouseover="this.style.borderColor='var(--border-accent)';this.style.top='-1.5rem';this.style.right='-1.5rem';this.style.bottom='-1.5rem';this.style.left='-1.5rem'"
+                 onmouseout="this.style.borderColor='var(--border)';this.style.top='';this.style.right='';this.style.bottom='';this.style.left=''"></div>
           </div>
         </div>
       </div>
 
-      <!-- Scroll cue -->
-      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-zinc-600">
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2" style="color:var(--scroll-cue)">
         <span class="text-[0.6rem] uppercase tracking-[0.2em] font-mono">Scroll</span>
-        <div class="w-px h-8 bg-gradient-to-b from-zinc-600 to-transparent animate-pulse"></div>
+        <div class="w-px h-8" style="background:linear-gradient(to bottom,var(--scroll-cue),transparent);animation:pulse 2s cubic-bezier(0.4,0,0.6,1) infinite"></div>
       </div>
+      <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}</style>
     </section>
 
-    <!-- ??????????????????????????????????????????
-         MARQUEE ??Trusted Partners (Section 6)
-         ?????????????????????????????????????????? -->
-    <section class="py-12 border-y border-white/5 overflow-hidden bg-[#0a0e14]">
+    <!-- ═══ MARQUEE ═══ -->
+    <section class="py-12 border-y overflow-hidden" style="background:var(--bg-marquee);border-color:var(--marquee-border)">
       <div class="marquee-track">
-        <!-- First set -->
-        <div class="flex items-center gap-12 text-zinc-500 text-sm font-mono uppercase tracking-widest">
-          <span class="flex items-center gap-2"><i class="ph ph-python-logo text-lg text-emerald-400/60"></i> Python</span>
-          <span class="flex items-center gap-2"><i class="ph ph-lightning text-lg text-emerald-400/60"></i> PyTorch</span>
-          <span class="flex items-center gap-2"><i class="ph ph-graph text-lg text-emerald-400/60"></i> TensorFlow</span>
-          <span class="flex items-center gap-2"><i class="ph ph-cpu text-lg text-emerald-400/60"></i> YOLO</span>
-          <span class="flex items-center gap-2"><i class="ph ph-brain text-lg text-emerald-400/60"></i> LLM / VLM</span>
-          <span class="flex items-center gap-2"><i class="ph ph-eye text-lg text-emerald-400/60"></i> OpenCV</span>
-          <span class="flex items-center gap-2"><i class="ph ph-code-block text-lg text-emerald-400/60"></i> LangChain</span>
-          <span class="flex items-center gap-2"><i class="ph ph-cloud text-lg text-emerald-400/60"></i> Docker</span>
+        <div class="flex items-center gap-12 t-text-muted text-sm font-mono uppercase tracking-widest">
+          <span class="flex items-center gap-2"><i class="ph ph-python-logo text-lg" style="color:var(--accent)"></i> Python</span>
+          <span class="flex items-center gap-2"><i class="ph ph-lightning text-lg" style="color:var(--accent)"></i> PyTorch</span>
+          <span class="flex items-center gap-2"><i class="ph ph-graph text-lg" style="color:var(--accent)"></i> TensorFlow</span>
+          <span class="flex items-center gap-2"><i class="ph ph-cpu text-lg" style="color:var(--accent)"></i> YOLO</span>
+          <span class="flex items-center gap-2"><i class="ph ph-brain text-lg" style="color:var(--accent)"></i> LLM / VLM</span>
+          <span class="flex items-center gap-2"><i class="ph ph-eye text-lg" style="color:var(--accent)"></i> OpenCV</span>
+          <span class="flex items-center gap-2"><i class="ph ph-code-block text-lg" style="color:var(--accent)"></i> LangChain</span>
+          <span class="flex items-center gap-2"><i class="ph ph-cloud text-lg" style="color:var(--accent)"></i> Docker</span>
         </div>
-        <!-- Duplicate for seamless loop -->
-        <div class="flex items-center gap-12 text-zinc-500 text-sm font-mono uppercase tracking-widest">
-          <span class="flex items-center gap-2"><i class="ph ph-python-logo text-lg text-emerald-400/60"></i> Python</span>
-          <span class="flex items-center gap-2"><i class="ph ph-lightning text-lg text-emerald-400/60"></i> PyTorch</span>
-          <span class="flex items-center gap-2"><i class="ph ph-graph text-lg text-emerald-400/60"></i> TensorFlow</span>
-          <span class="flex items-center gap-2"><i class="ph ph-cpu text-lg text-emerald-400/60"></i> YOLO</span>
-          <span class="flex items-center gap-2"><i class="ph ph-brain text-lg text-emerald-400/60"></i> LLM / VLM</span>
-          <span class="flex items-center gap-2"><i class="ph ph-eye text-lg text-emerald-400/60"></i> OpenCV</span>
-          <span class="flex items-center gap-2"><i class="ph ph-code-block text-lg text-emerald-400/60"></i> LangChain</span>
-          <span class="flex items-center gap-2"><i class="ph ph-cloud text-lg text-emerald-400/60"></i> Docker</span>
+        <div class="flex items-center gap-12 t-text-muted text-sm font-mono uppercase tracking-widest">
+          <span class="flex items-center gap-2"><i class="ph ph-python-logo text-lg" style="color:var(--accent)"></i> Python</span>
+          <span class="flex items-center gap-2"><i class="ph ph-lightning text-lg" style="color:var(--accent)"></i> PyTorch</span>
+          <span class="flex items-center gap-2"><i class="ph ph-graph text-lg" style="color:var(--accent)"></i> TensorFlow</span>
+          <span class="flex items-center gap-2"><i class="ph ph-cpu text-lg" style="color:var(--accent)"></i> YOLO</span>
+          <span class="flex items-center gap-2"><i class="ph ph-brain text-lg" style="color:var(--accent)"></i> LLM / VLM</span>
+          <span class="flex items-center gap-2"><i class="ph ph-eye text-lg" style="color:var(--accent)"></i> OpenCV</span>
+          <span class="flex items-center gap-2"><i class="ph ph-code-block text-lg" style="color:var(--accent)"></i> LangChain</span>
+          <span class="flex items-center gap-2"><i class="ph ph-cloud text-lg" style="color:var(--accent)"></i> Docker</span>
         </div>
       </div>
     </section>
 
-    <!-- ??????????????????????????????????????????
-         EXPERIENCE ??GSAP Pinned Split (Section 5)
-         ?????????????????????????????????????????? -->
+    <!-- ═══ EXPERIENCE ═══ -->
     <section id="work" class="section-gap px-6 pinned-container">
       <div class="w-full max-w-7xl mx-auto grid md:grid-cols-12 gap-8 md:gap-16 pinned-grid">
-        <!-- Pinned Left: Title -->
         <div class="pinned-left md:col-span-4 md:sticky md:top-32 md:self-start">
           <div class="eyebrow">Career</div>
-          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]">
+          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight t-text leading-[1.1]">
             The<br>journey<br>so far
           </h2>
-          <p class="mt-4 text-zinc-400 text-sm leading-relaxed max-w-[30ch]">
+          <p class="mt-4 t-text-secondary text-sm leading-relaxed max-w-[30ch]">
             From intern to engineer &ndash; building production AI systems that run
             at airports, win international awards, and push what machines can perceive.
           </p>
         </div>
 
-        <!-- Scroll Right: Experience Cards -->
         <div class="scroll-right md:col-span-7 md:col-start-6 flex flex-col gap-6">
-          <!-- Card 1 -->
           <div class="exp-card bento-card reveal-up">
             <div class="flex items-start justify-between mb-3">
               <div>
-                <h3 class="font-['Cabinet_Grotesk'] text-xl font-bold text-white">Vidi Labs Limited</h3>
-                <p class="text-emerald-400 text-sm font-medium mt-0.5">Machine Learning Engineer</p>
+                <h3 class="font-['Cabinet_Grotesk'] text-xl font-bold t-text">Vidi Labs Limited</h3>
+                <p class="t-accent text-sm font-medium mt-0.5">Machine Learning Engineer</p>
               </div>
-              <span class="text-zinc-500 text-xs font-mono whitespace-nowrap">Jun 2024 &ndash; Nov 2025</span>
+              <span class="t-text-dim text-xs font-mono whitespace-nowrap">Jun 2024 &ndash; Nov 2025</span>
             </div>
-            <ul class="space-y-2 text-zinc-400 text-sm leading-relaxed">
-              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Fine-tuned VLMs (Qwen3-VL, Llava) for multimodal chatbots via LLaMA-Factory</li>
-              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Built full-stack YOLO detection pipeline &ndash; data collection through deployment</li>
-              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Architected vision-only indoor navigation framework (depth estimation, semantic mapping, path planning)</li>
-              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Contributions awarded CES Innovation Award, HK ICT Awards 2024, SC WIN Now &amp; Next Challenge</li>
+            <ul class="space-y-2 t-text-secondary text-sm leading-relaxed">
+              <li class="flex gap-2"><span class="mt-1.5 shrink-0 w-1 h-1 rounded-full" style="background:var(--accent)"></span>Fine-tuned VLMs (Qwen3-VL, Llava) for multimodal chatbots via LLaMA-Factory</li>
+              <li class="flex gap-2"><span class="mt-1.5 shrink-0 w-1 h-1 rounded-full" style="background:var(--accent)"></span>Built full-stack YOLO detection pipeline &ndash; data collection through deployment</li>
+              <li class="flex gap-2"><span class="mt-1.5 shrink-0 w-1 h-1 rounded-full" style="background:var(--accent)"></span>Architected vision-only indoor navigation framework (depth estimation, semantic mapping, path planning)</li>
+              <li class="flex gap-2"><span class="mt-1.5 shrink-0 w-1 h-1 rounded-full" style="background:var(--accent)"></span>Contributions awarded CES Innovation Award, HK ICT Awards 2024, SC WIN Now &amp; Next Challenge</li>
             </ul>
           </div>
 
-          <!-- Card 2 -->
           <div class="exp-card bento-card reveal-up">
             <div class="flex items-start justify-between mb-3">
               <div>
-                <h3 class="font-['Cabinet_Grotesk'] text-xl font-bold text-white">Vidi Labs Limited</h3>
-                <p class="text-emerald-400 text-sm font-medium mt-0.5">ML Engineer Intern</p>
+                <h3 class="font-['Cabinet_Grotesk'] text-xl font-bold t-text">Vidi Labs Limited</h3>
+                <p class="t-accent text-sm font-medium mt-0.5">ML Engineer Intern</p>
               </div>
-              <span class="text-zinc-500 text-xs font-mono whitespace-nowrap">Jun &ndash; Aug 2023</span>
+              <span class="t-text-dim text-xs font-mono whitespace-nowrap">Jun &ndash; Aug 2023</span>
             </div>
-            <ul class="space-y-2 text-zinc-400 text-sm leading-relaxed">
-              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Developed CV models (CNNs, YOLO) for industrial automation</li>
-              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Built OCR + document structure analysis pipelines</li>
+            <ul class="space-y-2 t-text-secondary text-sm leading-relaxed">
+              <li class="flex gap-2"><span class="mt-1.5 shrink-0 w-1 h-1 rounded-full" style="background:var(--accent)"></span>Developed CV models (CNNs, YOLO) for industrial automation</li>
+              <li class="flex gap-2"><span class="mt-1.5 shrink-0 w-1 h-1 rounded-full" style="background:var(--accent)"></span>Built OCR + document structure analysis pipelines</li>
             </ul>
           </div>
 
-          <!-- Card 3: HKBU Education -->
           <div class="exp-card bento-card reveal-up">
             <div class="flex items-start justify-between mb-3">
               <div>
-                <h3 class="font-['Cabinet_Grotesk'] text-xl font-bold text-white">Hong Kong Baptist University</h3>
-                <p class="text-emerald-400 text-sm font-medium mt-0.5">BSc (Hons) Computer Science, AI</p>
+                <h3 class="font-['Cabinet_Grotesk'] text-xl font-bold t-text">Hong Kong Baptist University</h3>
+                <p class="t-accent text-sm font-medium mt-0.5">BSc (Hons) Computer Science, AI</p>
               </div>
-              <span class="text-zinc-500 text-xs font-mono whitespace-nowrap">2020 &ndash; 2024</span>
+              <span class="t-text-dim text-xs font-mono whitespace-nowrap">2020 &ndash; 2024</span>
             </div>
-            <ul class="space-y-2 text-zinc-400 text-sm leading-relaxed">
-              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Low-light image enhancement with RetinexNet + PyTorch</li>
-              <li class="flex gap-2"><span class="text-emerald-500 mt-1.5 shrink-0 w-1 h-1 rounded-full bg-emerald-500"></span>Library Management System with Vue.js + RESTful API</li>
+            <ul class="space-y-2 t-text-secondary text-sm leading-relaxed">
+              <li class="flex gap-2"><span class="mt-1.5 shrink-0 w-1 h-1 rounded-full" style="background:var(--accent)"></span>Low-light image enhancement with RetinexNet + PyTorch</li>
+              <li class="flex gap-2"><span class="mt-1.5 shrink-0 w-1 h-1 rounded-full" style="background:var(--accent)"></span>Library Management System with Vue.js + RESTful API</li>
             </ul>
           </div>
 
-          <!-- Card 4: Awards highlight -->
-          <div class="exp-card bento-card reveal-up border-emerald-500/10 bg-emerald-500/5">
+          <div class="exp-card bento-card reveal-up" style="border-color:var(--border-accent);background:var(--tag-bg)">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                <i class="ph ph-trophy text-emerald-400 text-lg"></i>
+              <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style="background:var(--tag-bg)">
+                <i class="ph ph-trophy t-accent-light text-lg"></i>
               </div>
               <div>
-                <p class="text-white font-medium text-sm">International Recognition</p>
-                <p class="text-zinc-400 text-xs mt-0.5">
+                <p class="t-text font-medium text-sm">International Recognition</p>
+                <p class="t-text-secondary text-xs mt-0.5">
                   CES Innovation Award &middot; HK ICT Awards 2024 &middot; SC WIN Venture of the Year
                 </p>
               </div>
@@ -389,25 +480,21 @@
       </div>
     </section>
 
-    <!-- ??????????????????????????????????????????
-         SKILLS ??Gapless Bento Grid (Section 4)
-         ?????????????????????????????????????????? -->
-    <section id="skills" class="section-gap px-6 bg-[#0a0e14]">
+    <!-- ═══ SKILLS ═══ -->
+    <section id="skills" class="section-gap px-6 t-bg-alt">
       <div class="w-full max-w-7xl mx-auto">
         <div class="max-w-xl mb-12 md:mb-16">
           <div class="eyebrow">Toolbox</div>
-          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]">
+          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight t-text leading-[1.1]">
             Stack &amp; capabilities
           </h2>
         </div>
 
-        <!-- Gapless Bento: dense grid, 3 columns -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5" style="grid-auto-flow: dense;">
-          <!-- Card 1: AI/ML (col-span-2) -->
-          <div class="bento-card md:col-span-2 md:row-span-1" style="background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(59,130,246,0.04));">
+          <div class="bento-card md:col-span-2 md:row-span-1" style="background:var(--bento-acc-bg)">
             <div class="flex items-center gap-2 mb-4">
-              <i class="ph ph-brain text-emerald-400 text-xl"></i>
-              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">AI / ML</h3>
+              <i class="ph ph-brain t-accent-light text-xl"></i>
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold t-text">AI / ML</h3>
             </div>
             <div class="flex flex-wrap gap-2">
               <span class="skill-tag">Machine Learning</span>
@@ -421,11 +508,10 @@
             </div>
           </div>
 
-          <!-- Card 2: Languages -->
           <div class="bento-card md:col-span-1">
             <div class="flex items-center gap-2 mb-4">
-              <i class="ph ph-code text-emerald-400 text-xl"></i>
-              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Languages</h3>
+              <i class="ph ph-code t-accent-light text-xl"></i>
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold t-text">Languages</h3>
             </div>
             <div class="flex flex-wrap gap-2">
               <span class="skill-tag">Python</span>
@@ -436,11 +522,10 @@
             </div>
           </div>
 
-          <!-- Card 3: Tools & Frameworks (col-span-2) -->
           <div class="bento-card md:col-span-2">
             <div class="flex items-center gap-2 mb-4">
-              <i class="ph ph-wrench text-emerald-400 text-xl"></i>
-              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Tools &amp; Frameworks</h3>
+              <i class="ph ph-wrench t-accent-light text-xl"></i>
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold t-text">Tools &amp; Frameworks</h3>
             </div>
             <div class="flex flex-wrap gap-2">
               <span class="skill-tag">PyTorch</span>
@@ -455,11 +540,10 @@
             </div>
           </div>
 
-          <!-- Card 4: Computer Vision -->
           <div class="bento-card md:col-span-1">
             <div class="flex items-center gap-2 mb-4">
-              <i class="ph ph-eye text-emerald-400 text-xl"></i>
-              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">CV</h3>
+              <i class="ph ph-eye t-accent-light text-xl"></i>
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold t-text">CV</h3>
             </div>
             <div class="flex flex-wrap gap-2">
               <span class="skill-tag">Object Detection</span>
@@ -469,12 +553,11 @@
             </div>
           </div>
 
-          <!-- Card 5: Platforms & Other (row-span-2) -->
           <div class="bento-card md:col-span-1 md:row-span-2 flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-2 mb-4">
-                <i class="ph ph-devices text-emerald-400 text-xl"></i>
-                <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Platforms</h3>
+                <i class="ph ph-devices t-accent-light text-xl"></i>
+                <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold t-text">Platforms</h3>
               </div>
               <div class="flex flex-wrap gap-2">
                 <span class="skill-tag">Conda</span>
@@ -483,10 +566,10 @@
                 <span class="skill-tag">Office</span>
               </div>
             </div>
-            <div class="mt-6 pt-4 border-t border-white/5">
+            <div class="mt-6 pt-4" style="border-top:1px solid var(--border)">
               <div class="flex items-center gap-2 mb-3">
-                <i class="ph ph-translate text-emerald-400 text-xl"></i>
-                <h3 class="font-['Cabinet_Grotesk'] text-base font-bold text-white">Languages</h3>
+                <i class="ph ph-translate t-accent-light text-xl"></i>
+                <h3 class="font-['Cabinet_Grotesk'] text-base font-bold t-text">Languages</h3>
               </div>
               <div class="flex flex-wrap gap-2">
                 <span class="skill-tag">Cantonese</span>
@@ -496,57 +579,52 @@
             </div>
           </div>
 
-          <!-- Card 6: Awards (col-span-1) -->
-          <div class="bento-card md:col-span-1 bg-emerald-500/5 border-emerald-500/10 flex flex-col items-center justify-center text-center">
-            <i class="ph ph-award text-emerald-400 text-3xl mb-2"></i>
-            <p class="text-white font-medium text-sm">CES Innovation<br>Award 2024</p>
-            <p class="text-zinc-500 text-[0.65rem] mt-1">Accessibility &amp; Agetech</p>
+          <div class="bento-card md:col-span-1 flex flex-col items-center justify-center text-center" style="border-color:var(--border-accent)">
+            <i class="ph ph-award t-accent-light text-3xl mb-2"></i>
+            <p class="t-text font-medium text-sm">CES Innovation<br>Award 2024</p>
+            <p class="t-text-muted text-[0.65rem] mt-1">Accessibility &amp; Agetech</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ??????????????????????????????????????????
-         PROJECTS ??GSAP Image Scale & Fade (Section 5)
-         ?????????????????????????????????????????? -->
+    <!-- ═══ PROJECTS ═══ -->
     <section id="projects" class="section-gap px-6">
       <div class="w-full max-w-7xl mx-auto">
         <div class="mb-12 md:mb-16">
           <div class="eyebrow">Projects</div>
-          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]">
+          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight t-text leading-[1.1]">
             Featured work
           </h2>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6 md:gap-8">
-          <!-- Project 1: Low-Light Enhancement -->
           <div class="project-card bento-card p-0 overflow-hidden group reveal-scale">
             <div class="h-48 md:h-56 overflow-hidden relative">
-              <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent z-10"></div>
+              <div class="absolute inset-0 z-10" style="background:var(--img-overlay)"></div>
               <img src="https://picsum.photos/seed/lowlight/800/500" alt="Low-Light Image Enhancement"
                    class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 grayscale-30 contrast-125">
             </div>
             <div class="p-5 md:p-6">
-              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Low-Light Image Enhancement</h3>
-              <p class="text-emerald-400 text-xs font-medium mt-1 mb-2">HKBU &middot; PyTorch &middot; RetinexNet</p>
-              <p class="text-zinc-400 text-sm leading-relaxed">
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold t-text">Low-Light Image Enhancement</h3>
+              <p class="t-accent text-xs font-medium mt-1 mb-2">HKBU &middot; PyTorch &middot; RetinexNet</p>
+              <p class="t-text-secondary text-sm leading-relaxed">
                 Designed a deep learning system using RetinexNet architecture to improve
                 visibility in low-light conditions with rigorous qualitative and quantitative validation.
               </p>
             </div>
           </div>
 
-          <!-- Project 2: Library Management System -->
           <div class="project-card bento-card p-0 overflow-hidden group reveal-scale">
             <div class="h-48 md:h-56 overflow-hidden relative">
-              <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent z-10"></div>
+              <div class="absolute inset-0 z-10" style="background:var(--img-overlay)"></div>
               <img src="https://picsum.photos/seed/library/800/500" alt="Library Management System"
                    class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 grayscale-30 contrast-125">
             </div>
             <div class="p-5 md:p-6">
-              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold text-white">Library Management System</h3>
-              <p class="text-emerald-400 text-xs font-medium mt-1 mb-2">HKBU &middot; Vue.js &middot; REST API</p>
-              <p class="text-zinc-400 text-sm leading-relaxed">
+              <h3 class="font-['Cabinet_Grotesk'] text-lg font-bold t-text">Library Management System</h3>
+              <p class="t-accent text-xs font-medium mt-1 mb-2">HKBU &middot; Vue.js &middot; REST API</p>
+              <p class="t-text-secondary text-sm leading-relaxed">
                 Full-featured web app with book cataloging, loan tracking, and intuitive UI.
                 Agile team delivery with RESTful integration and responsive frontend architecture.
               </p>
@@ -556,52 +634,47 @@
       </div>
     </section>
 
-    <!-- ??????????????????????????????????????????
-         VOLUNTEER ??Feedback Carousel (Section 6)
-         ?????????????????????????????????????????? -->
-    <section class="section-gap px-6 bg-[#0a0e14]">
+    <!-- ═══ VOLUNTEER ═══ -->
+    <section class="section-gap px-6 t-bg-alt">
       <div class="w-full max-w-7xl mx-auto">
         <div class="mb-12 md:mb-16">
           <div class="eyebrow">Community</div>
-          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.1]">
+          <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-5xl font-bold tracking-tight t-text leading-[1.1]">
             Beyond the code
           </h2>
         </div>
 
         <div class="grid md:grid-cols-3 gap-6">
-          <!-- Volunteer 1 -->
           <div class="bento-card flex flex-col reveal-up">
-            <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
-              <i class="ph ph-handshake text-emerald-400 text-lg"></i>
+            <div class="w-10 h-10 rounded-full flex items-center justify-center mb-4" style="background:var(--tag-bg)">
+              <i class="ph ph-handshake t-accent-light text-lg"></i>
             </div>
-            <h3 class="font-['Cabinet_Grotesk'] text-base font-bold text-white mb-2">External Secretary</h3>
-            <p class="text-emerald-400 text-xs font-medium mb-2">HKBU Social Service Association</p>
-            <p class="text-zinc-400 text-sm leading-relaxed flex-1">
+            <h3 class="font-['Cabinet_Grotesk'] text-base font-bold t-text mb-2">External Secretary</h3>
+            <p class="t-accent text-xs font-medium mb-2">HKBU Social Service Association</p>
+            <p class="t-text-secondary text-sm leading-relaxed flex-1">
               Led 10 volunteers in community Cantonese teaching. Managed external relations,
               partnerships, and outreach communications.
             </p>
           </div>
 
-          <!-- Volunteer 2 -->
           <div class="bento-card flex flex-col reveal-up">
-            <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
-              <i class="ph ph-tree text-emerald-400 text-lg"></i>
+            <div class="w-10 h-10 rounded-full flex items-center justify-center mb-4" style="background:var(--tag-bg)">
+              <i class="ph ph-tree t-accent-light text-lg"></i>
             </div>
-            <h3 class="font-['Cabinet_Grotesk'] text-base font-bold text-white mb-2">Eco-Ranger</h3>
-            <p class="text-emerald-400 text-xs font-medium mb-2">Hang Seng &middot; Conservancy Association</p>
-            <p class="text-zinc-400 text-sm leading-relaxed flex-1">
+            <h3 class="font-['Cabinet_Grotesk'] text-base font-bold t-text mb-2">Eco-Ranger</h3>
+            <p class="t-accent text-xs font-medium mb-2">Hang Seng &middot; Conservancy Association</p>
+            <p class="t-text-secondary text-sm leading-relaxed flex-1">
               Joined conservation teams for mountain clean-up operations and environmental outreach in Hong Kong.
             </p>
           </div>
 
-          <!-- Volunteer 3 -->
           <div class="bento-card flex flex-col reveal-up">
-            <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
-              <i class="ph ph-drop text-emerald-400 text-lg"></i>
+            <div class="w-10 h-10 rounded-full flex items-center justify-center mb-4" style="background:var(--tag-bg)">
+              <i class="ph ph-drop t-accent-light text-lg"></i>
             </div>
-            <h3 class="font-['Cabinet_Grotesk'] text-base font-bold text-white mb-2">Blood Donation Promoter</h3>
-            <p class="text-emerald-400 text-xs font-medium mb-2">Hong Kong Red Cross</p>
-            <p class="text-zinc-400 text-sm leading-relaxed flex-1">
+            <h3 class="font-['Cabinet_Grotesk'] text-base font-bold t-text mb-2">Blood Donation Promoter</h3>
+            <p class="t-accent text-xs font-medium mb-2">Hong Kong Red Cross</p>
+            <p class="t-text-secondary text-sm leading-relaxed flex-1">
               Organized on-campus donation events, engaged the public, and supported operations.
             </p>
           </div>
@@ -609,58 +682,56 @@
       </div>
     </section>
 
-    <!-- ??????????????????????????????????????????
-         CTA ??Action (Section 2)
-         ?????????????????????????????????????????? -->
+    <!-- ═══ CTA ═══ -->
     <section id="contact" class="section-gap px-6 cta-gradient">
       <div class="w-full max-w-4xl mx-auto text-center">
         <div class="eyebrow justify-center">Connect</div>
-        <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-6xl font-bold tracking-tight text-white leading-[1.05] max-w-4xl mx-auto">
-          Let&rsquo;s build<br class="md:hidden"> something<span class="text-emerald-400"> intelligent</span>
+        <h2 class="font-['Cabinet_Grotesk'] text-4xl md:text-6xl font-bold tracking-tight t-text leading-[1.05] max-w-4xl mx-auto">
+          Let&rsquo;s build<br class="md:hidden"> something<span class="t-accent-light"> intelligent</span>
         </h2>
-        <p class="mt-6 text-zinc-400 text-base md:text-lg max-w-lg mx-auto leading-relaxed">
+        <p class="mt-6 t-text-secondary text-base md:text-lg max-w-lg mx-auto leading-relaxed">
           Open to ML engineering roles, research collaborations, and projects at the
           intersection of vision, language, and autonomous systems.
         </p>
         <div class="flex flex-wrap justify-center gap-4 mt-10">
           <a href="mailto:benjamin.tam0607@gmail.com"
-             class="px-8 py-4 rounded-full bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-500 transition-all duration-300 shadow-xl shadow-emerald-600/20 flex items-center gap-2">
+             class="px-8 py-4 rounded-full text-white font-semibold text-sm transition-all duration-300 shadow-xl flex items-center gap-2"
+             style="background:var(--accent-deep);box-shadow:0 8px 24px var(--shadow-accent)"
+             onmouseover="this.style.background='var(--accent)'" onmouseout="this.style.background='var(--accent-deep)'">
             <i class="ph ph-paper-plane-right text-base"></i> benjamin.tam0607@gmail.com
           </a>
           <a href="https://www.linkedin.com/in/benjamintam0607" target="_blank"
-             class="px-8 py-4 rounded-full bg-white/5 text-zinc-200 border border-white/10 font-semibold text-sm hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex items-center gap-2">
+             class="px-8 py-4 rounded-full font-semibold text-sm transition-all duration-300 flex items-center gap-2"
+             style="background:var(--btn-sec-bg);color:var(--btn-sec-text);border:1px solid var(--btn-sec-border)"
+             onmouseover="this.style.background='var(--border-accent)'" onmouseout="this.style.background='var(--btn-sec-bg)'">
             <i class="ph ph-linkedin-logo text-base"></i> LinkedIn
           </a>
         </div>
       </div>
     </section>
 
-    <!-- ??????????????????????????????????????????
-         FOOTER
-         ?????????????????????????????????????????? -->
-    <footer class="py-10 px-6 border-t border-white/5 bg-[#070a0e]">
-      <div class="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-500 text-xs">
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="py-10 px-6 border-t" style="background:var(--bg-body);border-color:var(--footer-border)">
+      <div class="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 t-text-muted text-xs">
         <p>&copy; <span id="current-year">2025</span> Benjamin Tam. All rights reserved.</p>
         <div class="flex items-center gap-6">
-          <a href="mailto:benjamin.tam0607@gmail.com" class="hover:text-emerald-400 transition-colors">Email</a>
-          <a href="https://www.linkedin.com/in/benjamintam0607" target="_blank" class="hover:text-emerald-400 transition-colors">LinkedIn</a>
-          <span class="text-zinc-700">(852) 67080288</span>
+          <a href="mailto:benjamin.tam0607@gmail.com" class="hover:t-accent-light transition-colors">Email</a>
+          <a href="https://www.linkedin.com/in/benjamintam0607" target="_blank" class="hover:t-accent-light transition-colors">LinkedIn</a>
+          <span style="color:var(--phone-color)">(852) 67080288</span>
         </div>
       </div>
     </footer>
 
   </main>
 
-  <!-- ??????????????????????????????????????????
-       JAVASCRIPT ??GSAP + ScrollTrigger + Utilities
-       ?????????????????????????????????????????? -->
+  <!-- ═══ JAVASCRIPT ═══ -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-      // ?? Footer year ??
+      // Footer year
       document.getElementById('current-year').textContent = new Date().getFullYear();
 
-      // ?? Smooth scroll for nav links ??
+      // Smooth scroll
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
           const id = this.getAttribute('href');
@@ -673,16 +744,41 @@
         });
       });
 
-      // ?? GSAP: Register ScrollTrigger ??
+      // ── Theme Toggle ──
+      const html = document.documentElement;
+      const toggleBtn = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeIcon');
+
+      function setTheme(dark) {
+        if (dark) {
+          html.classList.add('dark');
+          icon.className = 'ph ph-moon';
+        } else {
+          html.classList.remove('dark');
+          icon.className = 'ph ph-sun';
+        }
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      }
+
+      // Init icon based on current state (light = default)
+      if (html.classList.contains('dark')) {
+        icon.className = 'ph ph-moon';
+      } else {
+        icon.className = 'ph ph-sun';
+      }
+
+      toggleBtn.addEventListener('click', function() {
+        setTheme(!html.classList.contains('dark'));
+      });
+
+      // ── GSAP ──
       gsap.registerPlugin(ScrollTrigger);
 
-      // ?? 1. Scroll Pinning (Split) ??Section title pins left ??
       const pinnedSection = document.querySelector('.pinned-container');
       const pinnedLeft = pinnedSection?.querySelector('.pinned-left');
       const scrollRight = pinnedSection?.querySelector('.scroll-right');
 
       if (pinnedLeft && scrollRight && window.innerWidth >= 768) {
-        // Pin the left column while right scrolls
         ScrollTrigger.create({
           trigger: pinnedSection,
           start: 'top 96px',
@@ -692,7 +788,6 @@
           anticipatePin: 1,
         });
 
-        // Animate experience cards on scroll
         const expCards = pinnedSection.querySelectorAll('.exp-card');
         expCards.forEach((card, i) => {
           gsap.to(card, {
@@ -709,14 +804,12 @@
           });
         });
       } else {
-        // Mobile fallback: just fade cards in
         document.querySelectorAll('.reveal-up').forEach(el => {
           el.style.opacity = '1';
           el.style.transform = 'translateY(0)';
         });
       }
 
-      // ?? 2. Project Cards: Image Scale & Fade (Section 5) ??
       const projectCards = document.querySelectorAll('.project-card');
       projectCards.forEach(card => {
         const img = card.querySelector('img');
@@ -748,7 +841,6 @@
         });
       });
 
-      // ?? 3. Reveal-up for volunteer cards ??
       document.querySelectorAll('.reveal-up').forEach(el => {
         gsap.to(el, {
           scrollTrigger: {
@@ -763,7 +855,6 @@
         });
       });
 
-      // ?? 4. Reveal-scale for project containers ??
       document.querySelectorAll('.reveal-scale').forEach(el => {
         gsap.to(el, {
           scrollTrigger: {
@@ -778,10 +869,6 @@
         });
       });
 
-      // ?? 5. Marquee pause on hover (CSS handles this, but GSAP fallback) ??
-      // Already handled via CSS: .marquee-track:hover { animation-play-state: paused; }
-
-      // ?? 6. Nav bar subtle parallax / shrink on scroll ??
       gsap.to('.nav-glass', {
         scrollTrigger: {
           trigger: 'body',
@@ -793,12 +880,11 @@
         ease: 'none',
       });
 
-      // ?? 7. Console greeting (tasteful) ??
       console.log('%cBenjamin Tam', 'font-family: Cabinet Grotesk; font-size: 20px; font-weight: bold; color: #10b981');
-      console.log('%cML Engineer 繚 benjamin.tam0607@gmail.com', 'color: #8b949e');
+      console.log('%cML Engineer &ndash; benjamin.tam0607@gmail.com', 'color: var(--console-color)');
       console.log('%clinkedin.com/in/benjamintam0607', 'color: #3b82f6');
 
-    }); // end DOMContentLoaded
+    });
   </script>
 </body>
 </html>
